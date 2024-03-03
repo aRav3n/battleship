@@ -43,6 +43,12 @@ describe("test shipFactory()", () => {
     newShip.hit(0);
     expect(newShip.isSunk()).toBeFalsy();
   });
+
+  test("shipLocation array is correct length", () => {
+    const newShip = shipFactory(2);
+    const locationArray = newShip.shipLocation;
+    expect(locationArray.length).toEqual(2);
+  });
 });
 
 describe("test gameboardFactory()", () => {

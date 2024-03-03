@@ -8,6 +8,7 @@ export function shipFactory(length) {
   }
 
   const ship = Array(length);
+  const shipLocation = Array(length);
 
   for (let i = 0; i < length; i++) {
     ship[i] = 0;
@@ -25,15 +26,21 @@ export function shipFactory(length) {
     ship[index] = 1;
   };
 
-  return { ship, hit, isSunk };
+  return { ship, hit, isSunk, shipLocation };
 }
 
 export function gameboardFactory() {
-  const ships = [];
+  const navalFleet = [];
   const gridSize = 10;
 
-  const checkIfValidPlacement = (length, x, y, orientation) => {
-    for (let i = 0; i < ships.length; i++) {}
+  const checkIfValidSpot = (x, y) => {
+    const spot = [x, y];
+    for (let i = 0; i < navalFleet.length; i++) {
+      if (navalFleet[i].includes(spot)) {
+        return false;
+      }
+    }
+    return true;
   };
 
   const placeShip = (length, x, y, orientation) => {
@@ -59,11 +66,27 @@ export function gameboardFactory() {
         xToUse = gridSize - length;
       }
       for (let i = 0; i < length; i++) {
-        ship[i][0] = xToUse + i;
-        ship[i][1] = yToUse;
+        if (!checkIfValidSpot(xToUse + i, yToUse)) {
+          return false;
+        } else {
+          shipLocation.push([xToUse + i, yToUse]);
+        }
       }
+      navalFleet.push(ship);
+    } else {
+      if (yToUse > gridSize - length) {
+        yToUse = gridSize - length;
+      }
+      for (let i = 0; i < length; i++) {
+        if (!checkIfValidSpot(xToUse, yToUse + i)) {
+          return false;
+        } else {
+          shipLocation.push([xToUse, yToUse + i]);
+        }
+      }
+      navalFleet.push(ship);
     }
   };
 
-  return { ships, placeShip };
+  return { navalFleet, placeShip };
 }
