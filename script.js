@@ -33,13 +33,21 @@ export function gameboardFactory() {
   const navalFleet = [];
   const gridSize = 10;
 
-  const checkIfValidSpot = (x, y) => {
-    const spot = [x, y];
-    for (let i = 0; i < navalFleet.length; i++) {
-      if (navalFleet[i].includes(spot)) {
-        return false;
+  const ableToPlaceThisShip = (fleet, newShip) => {
+    const newShipLocation = newShip.location;
+    for (let i = 0; i < fleet.length; i++) {
+      const fleetShipLocation = fleet[i].location;
+      for (let j = 0; j < fleetShipLocation.length; j++) {
+        const fleetShipSpot = fleetShipLocation[j];
+        for (let k = 0; k < newShipLocation.length; k++) {
+          const newShipSpot = newShipLocation[k];
+          if (newShipSpot.toString() === fleetShipSpot.toString()) {
+            return false;
+          }
+        }
       }
     }
+
     return true;
   };
 
@@ -55,38 +63,35 @@ export function gameboardFactory() {
       throw new Error(`${x}, ${y} is not a valid set of coordinates`);
     }
 
+    const shipObject = {};
     let xToUse = x;
     let yToUse = y;
-    const ship = shipFactory(length);
-    const shipLocation = Array(length);
+    const newShip = shipFactory(length);
+    shipObject.ship = newShip;
     if (orientation !== "h" && orientation !== "v") {
       throw new Error("not a valid orientation, can only be 'h' or 'v'");
-    } else if (orientation === "h") {
-      if (xToUse > gridSize - length) {
+    } else {
+      const locationArray = [];
+      if (orientation === "v" && yToUse > gridSize - length) {
+        yToUse = gridSize - length;
+      }
+      if (orientation === "h" && xToUse > gridSize - length) {
         xToUse = gridSize - length;
       }
       for (let i = 0; i < length; i++) {
-        if (!checkIfValidSpot(xToUse + i, yToUse)) {
-          return false;
-        } else {
-          shipLocation.push([xToUse + i, yToUse]);
-        }
+        const thisX = xToUse + (orientation === "h" ? i : 0);
+        const thisY = yToUse + (orientation === "v" ? i : 0);
+        const spot = [];
+        spot[0] = thisX;
+        spot[1] = thisY;
+        locationArray.push([thisX, thisY]);
       }
-      navalFleet.push(ship);
-    } else {
-      if (yToUse > gridSize - length) {
-        yToUse = gridSize - length;
-      }
-      for (let i = 0; i < length; i++) {
-        if (!checkIfValidSpot(xToUse, yToUse + i)) {
-          return false;
-        } else {
-          shipLocation.push([xToUse, yToUse + i]);
-        }
-      }
-      navalFleet.push(ship);
+      shipObject.location = locationArray;
+      ableToPlaceThisShip(navalFleet, shipObject)
+        ? navalFleet.push(shipObject)
+        : null;
     }
   };
 
-  return { navalFleet, placeShip };
+  return { navalFleet, placeShip, receiveAttack };
 }

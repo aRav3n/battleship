@@ -65,4 +65,55 @@ describe("test gameboardFactory()", () => {
       newGameBoard.placeShip(3, 4, 14, "h");
     }).toThrow("4, 14 is not a valid set of coordinates");
   });
+
+  test("placeShip() places a single shipObject correctly", () => {
+    const newGameboard = gameboardFactory();
+    newGameboard.placeShip(3, 0, 0, "h");
+    const onlyShipLocation = newGameboard.navalFleet[0].location.toString();
+    const expectedArrayString = [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+    ].toString();
+    expect(onlyShipLocation).toBe(expectedArrayString);
+  });
+
+  test("add 2 ships to the fleet", () => {
+    const newGameboard = gameboardFactory();
+    newGameboard.placeShip(3, 0, 0, "h");
+    newGameboard.placeShip(3, 1, 1, "h");
+    const fleetArray = newGameboard.navalFleet;
+    expect(fleetArray.length).toEqual(2);
+  });
+
+  test("correctly add 2 ships to the fleet", () => {
+    const newGameboard = gameboardFactory();
+    newGameboard.placeShip(3, 0, 0, "h");
+    newGameboard.placeShip(3, 1, 1, "h");
+    const fleetArray = newGameboard.navalFleet;
+    const expectedCombinedShipArray =
+      [
+        [0, 0],
+        [1, 0],
+        [2, 0],
+      ].toString() +
+      [
+        [1, 1],
+        [2, 1],
+        [3, 1],
+      ].toString();
+    const returnedCombinedShipArray =
+      fleetArray[0].location.toString() + fleetArray[1].location.toString();
+    expect(returnedCombinedShipArray).toBe(expectedCombinedShipArray);
+  });
+
+  test("placeShip() won't place overlapping ships", () => {
+    const newGameboard = gameboardFactory();
+    const fleetArray = newGameboard.navalFleet;
+    newGameboard.placeShip(1, 1, 1, "h");
+    const fleetAfterFirstShip = fleetArray.toString();
+    newGameboard.placeShip(1, 1, 1, "v");
+    const fleetAfterSecondShip = fleetArray.toString();
+    expect(fleetAfterFirstShip).toEqual(fleetAfterSecondShip);
+  });
 });
