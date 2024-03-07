@@ -117,15 +117,22 @@ describe("test gameboardFactory()", () => {
     expect(fleetAfterFirstShip).toEqual(fleetAfterSecondShip);
   });
 
-  /*
   test("receiveAttack() places a hit on a ship in the correct index", () => {
     const game = gameboardFactory();
     const fleet = game.navalFleet;
     game.placeShip(3, 0, 0, "h");
-    const expectedHitArray = [1, 0, 0].toString();
-    game.receiveAttack([0, 0]);
+    game.receiveAttack([1, 0]);
+    const expectedHitArray = [0, 1, 0].toString();
     const shipHitArray = fleet[0].ship.ship.toString();
     expect(shipHitArray).toEqual(expectedHitArray);
   });
-  */
+
+  test("receiveAttack() adds a missed hit to [missedHits]", () => {
+    const game = gameboardFactory();
+    game.placeShip(3, 0, 0, "h");
+    game.receiveAttack([5, 5]);
+    game.receiveAttack([6, 6]);
+    const expectedMissedHitArray = [[5, 5].toString(), [6, 6].toString()];
+    expect(game.missedHits).toEqual(expectedMissedHitArray);
+  });
 });

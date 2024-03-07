@@ -96,12 +96,20 @@ export function gameboardFactory() {
   };
 
   const receiveAttack = (coordinateArrayXY) => {
-    for (let navalShip in navalFleet) {
-      const shipHitArray = navalShip.ship.ship;
+    const hitCoordinateString = coordinateArrayXY.toString();
+    for (let i = 0; i < navalFleet.length; i++) {
+      const navalShip = navalFleet[i];
+      const shipObject = navalShip.ship;
       const shipLocationArray = navalShip.location;
-      if (navalShip.indexOf(coordinateArrayXY) >= 0) {
+      for (let i = 0; i < shipLocationArray.length; i++) {
+        const shipCoordinates = shipLocationArray[i];
+        if (hitCoordinateString === shipCoordinates) {
+          shipObject.hit(i);
+          return;
+        }
       }
     }
+    missedHits.push(hitCoordinateString);
   };
 
   return { navalFleet, placeShip, receiveAttack, missedHits };
