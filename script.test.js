@@ -116,4 +116,16 @@ describe("test gameboardFactory()", () => {
     const fleetAfterSecondShip = fleetArray.toString();
     expect(fleetAfterFirstShip).toEqual(fleetAfterSecondShip);
   });
+
+  /*
+  test("receiveAttack() places a hit on a ship in the correct index", () => {
+    const game = gameboardFactory();
+    const fleet = game.navalFleet;
+    game.placeShip(3, 0, 0, "h");
+    const expectedHitArray = [1, 0, 0].toString();
+    game.receiveAttack([0, 0]);
+    const shipHitArray = fleet[0].ship.ship.toString();
+    expect(shipHitArray).toEqual(expectedHitArray);
+  });
+  */
 });

@@ -30,6 +30,7 @@ export function shipFactory(length) {
 }
 
 export function gameboardFactory() {
+  const missedHits = [];
   const navalFleet = [];
   const gridSize = 10;
 
@@ -41,7 +42,7 @@ export function gameboardFactory() {
         const fleetShipSpot = fleetShipLocation[j];
         for (let k = 0; k < newShipLocation.length; k++) {
           const newShipSpot = newShipLocation[k];
-          if (newShipSpot.toString() === fleetShipSpot.toString()) {
+          if (newShipSpot === fleetShipSpot) {
             return false;
           }
         }
@@ -84,7 +85,8 @@ export function gameboardFactory() {
         const spot = [];
         spot[0] = thisX;
         spot[1] = thisY;
-        locationArray.push([thisX, thisY]);
+        const spotString = spot.toString();
+        locationArray.push(spotString);
       }
       shipObject.location = locationArray;
       ableToPlaceThisShip(navalFleet, shipObject)
@@ -93,5 +95,14 @@ export function gameboardFactory() {
     }
   };
 
-  return { navalFleet, placeShip, receiveAttack };
+  const receiveAttack = (coordinateArrayXY) => {
+    for (let navalShip in navalFleet) {
+      const shipHitArray = navalShip.ship.ship;
+      const shipLocationArray = navalShip.location;
+      if (navalShip.indexOf(coordinateArrayXY) >= 0) {
+      }
+    }
+  };
+
+  return { navalFleet, placeShip, receiveAttack, missedHits };
 }
