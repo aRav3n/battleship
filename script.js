@@ -95,6 +95,23 @@ export function gameboardFactory() {
     }
   };
 
+  const allShipsAreSunk = () => {
+    let numberOfShipsHit = 0;
+    for (let i = 0; i < navalFleet.length; i++) {
+      const navalShip = navalFleet[i];
+      const shipHitArray = navalShip.ship.ship;
+      const numberOfHits = shipHitArray.reduce(
+        (sum, currentValue) => sum + currentValue,
+        0
+      );
+      numberOfHits === shipHitArray.length ? numberOfShipsHit++ : null;
+    }
+    if (numberOfShipsHit === navalFleet.length) {
+      return true;
+    }
+    return false;
+  };
+
   const receiveAttack = (coordinateArrayXY) => {
     const hitCoordinateString = coordinateArrayXY.toString();
     for (let i = 0; i < navalFleet.length; i++) {
@@ -105,6 +122,7 @@ export function gameboardFactory() {
         const shipCoordinates = shipLocationArray[i];
         if (hitCoordinateString === shipCoordinates) {
           shipObject.hit(i);
+          allShipsAreSunk();
           return;
         }
       }
@@ -112,5 +130,5 @@ export function gameboardFactory() {
     missedHits.push(hitCoordinateString);
   };
 
-  return { navalFleet, placeShip, receiveAttack, missedHits };
+  return { navalFleet, placeShip, receiveAttack, missedHits, allShipsAreSunk };
 }

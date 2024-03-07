@@ -135,4 +135,31 @@ describe("test gameboardFactory()", () => {
     const expectedMissedHitArray = [[5, 5].toString(), [6, 6].toString()];
     expect(game.missedHits).toEqual(expectedMissedHitArray);
   });
+
+  test("allShipsAreSunk() returns true if all ships are completely hit", () => {
+    const game = gameboardFactory();
+    const fleet = game.navalFleet;
+    game.placeShip(3, 0, 0, "h");
+    game.placeShip(3, 0, 1, "h");
+    game.receiveAttack([0, 0]);
+    game.receiveAttack([1, 0]);
+    game.receiveAttack([2, 0]);
+    game.receiveAttack([0, 1]);
+    game.receiveAttack([1, 1]);
+    game.receiveAttack([2, 1]);
+    expect(game.allShipsAreSunk()).toEqual(true);
+  });
+
+  test("allShipsAreSunk() returns false if not all ships are completely hit", () => {
+    const game = gameboardFactory();
+    const fleet = game.navalFleet;
+    game.placeShip(3, 0, 0, "h");
+    game.placeShip(3, 0, 1, "h");
+    game.receiveAttack([0, 0]);
+    game.receiveAttack([1, 0]);
+    game.receiveAttack([2, 0]);
+    game.receiveAttack([0, 1]);
+    game.receiveAttack([2, 1]);
+    expect(game.allShipsAreSunk()).toEqual(false);
+  });
 });
