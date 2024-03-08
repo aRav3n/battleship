@@ -165,4 +165,29 @@ describe("test gameboardFactory()", () => {
   });
 });
 
-describe("test player()", () => {});
+describe("test player()", () => {
+  test("fireMissile can't have non integer attack coordinates", () => {
+    const game = player("ObiWan");
+    expect(() => {
+      game.fireMissile([1.5, 2.7]);
+    }).toThrow("1.5, 2.7 is not a valid set of coordinates");
+  });
+
+  test("fireMissile won't accept attack coordinates that are off the board", () => {
+    const game = player("Luke");
+    expect(() => {
+      game.fireMissile([-1, 11]);
+    }).toThrow(Error);
+  });
+
+  test("fireMissile won't allow you to do the attack the same position twice", () => {
+    const game = player("Han");
+    game.fireMissile([2, 2]);
+    game.fireMissile([1, 2]);
+    expect(game.fireMissile([2, 2])).toBe(
+      "this spot has already been attacked"
+    );
+  });
+
+  
+});

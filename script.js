@@ -134,13 +134,36 @@ export function gameboardFactory() {
 }
 
 export function player(name) {
-  // playerTurn boolean
+  let humanPlayerTurn = true;
 
-  // fireMissile
+  const human = gameboardFactory();
 
-  // humanPlayer
+  const computer = gameboardFactory();
 
-  // placeCarrier length = 5
+  const fireMissile = (coordinateArrayXY) => {
+    let target;
+    humanPlayerTurn ? (target = computer) : (target = human);
+    const x = coordinateArrayXY[0];
+    const y = coordinateArrayXY[1];
+    const coordinateString = coordinateArrayXY.toString();
+    if (
+      x > 10 ||
+      x < 0 ||
+      y > 10 ||
+      y < 0 ||
+      (x + 1) % 1 !== 0 ||
+      (y + 1) % 1 !== 0
+    ) {
+      throw new Error(`${x}, ${y} is not a valid set of coordinates`);
+    } else if (target.missedHits.includes(coordinateString)) {
+      return "this spot has already been attacked";
+    }
+
+    target.receiveAttack(coordinateArrayXY);
+    humanPlayerTurn = !humanPlayerTurn;
+  };
+
+  // length = 5
 
   // placeBattleship length = 4
 
@@ -150,6 +173,5 @@ export function player(name) {
 
   // placePatrolBoat length = 2
 
-  // computer
-  
+  return { fireMissile };
 }
