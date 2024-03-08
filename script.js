@@ -163,15 +163,66 @@ export function player(name) {
     humanPlayerTurn = !humanPlayerTurn;
   };
 
-  // length = 5
+  const placeShip = (player, coordinateArrayXY, length, orientation) => {
+    const fleet = player.navalFleet;
+    const initialFleetSize = fleet.length;
+    const x = coordinateArrayXY[0];
+    const y = coordinateArrayXY[1];
+    player.placeShip(length, x, y, orientation);
+    if (fleet.length === initialFleetSize) {
+      return false;
+    }
+    return true;
+  };
 
-  // placeBattleship length = 4
+  const placeCarrier = (forHumanPlayer, coordinateArrayXY, orientation) => {
+    let player;
+    forHumanPlayer ? (player = human) : (player = computer);
+    if (placeShip(player, coordinateArrayXY, 5, orientation)) {
+      return true;
+    }
+    return false;
+  };
 
-  // placeDestroyer length = 3
+  const placeBattleship = (forHumanPlayer, coordinateArrayXY, orientation) => {
+    let player;
+    forHumanPlayer ? (player = human) : (player = computer);
+    if (placeShip(player, coordinateArrayXY, 4, orientation)) {
+      return true;
+    }
+    return false;
+  };
 
-  // placeSubmarine length = 3
+  const placeDestroyer = (forHumanPlayer, coordinateArrayXY, orientation) => {
+    let player;
+    forHumanPlayer ? (player = human) : (player = computer);
+    if (placeShip(player, coordinateArrayXY, 3, orientation)) {
+      return true;
+    }
+    return false;
+  };
 
-  // placePatrolBoat length = 2
+  const placeSubmarine = (forHumanPlayer, coordinateArrayXY, orientation) => {
+    let player;
+    forHumanPlayer ? (player = human) : (player = computer);
+    if (placeShip(player, coordinateArrayXY, 3, orientation)) {
+      return true;
+    }
+    return false;
+  };
 
-  return { fireMissile };
+  const placePatrolBoat = (forHumanPlayer, coordinateArrayXY, orientation) => {
+    let player;
+    forHumanPlayer ? (player = human) : (player = computer);
+    if (placeShip(player, coordinateArrayXY, 2, orientation)) {
+      return true;
+    }
+    return false;
+  };
+
+  return { fireMissile, placeCarrier, placeBattleship, placeDestroyer, placeSubmarine, placePatrolBoat };
+}
+
+const domManipulation = () => {
+  
 }

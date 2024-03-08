@@ -189,5 +189,34 @@ describe("test player()", () => {
     );
   });
 
-  
+  test("placeCarrier lets you know when a ship was placed", () => {
+    const game = player("Leia");
+    expect(game.placeCarrier(true, [1, 1], "h")).toBe(true);
+  });
+
+  test("placeShip lets you know when a ship was not placed", () => {
+    const game = player("QuiGon");
+    game.placeCarrier(true, [1, 1], "h");
+    expect(game.placeBattleship(true, [1, 1], "h")).toBe(false);
+  });
+
+  test("placeCarrier lets you know when a ship was placed", () => {
+    const game = player("Jyn");
+    expect(game.placeBattleship(true, [1, 1], "h")).toBe(true);
+  });
+
+  test("placeCarrier lets you know when a ship was placed", () => {
+    const game = player("Kylo");
+    expect(game.placeDestroyer(true, [1, 1], "h")).toBe(true);
+  });
+
+  test("placeCarrier lets you know when a ship was placed", () => {
+    const game = player("Darth Vader");
+    expect(game.placeSubmarine(true, [1, 1], "h")).toBe(true);
+  });
+
+  test("placeCarrier lets you know when a ship was placed", () => {
+    const game = player("Darth Plageus The Wise");
+    expect(game.placePatrolBoat(true, [1, 1], "h")).toBe(true);
+  });
 });
