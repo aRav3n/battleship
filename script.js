@@ -132,3 +132,24 @@ export function gameboardFactory() {
 
   return { navalFleet, placeShip, receiveAttack, missedHits, allShipsAreSunk };
 }
+
+export function player(name) {
+  // playerTurn boolean
+
+  // fireMissile
+
+  // humanPlayer
+
+  // placeCarrier length = 5
+
+  // placeBattleship length = 4
+
+  // placeDestroyer length = 3
+
+  // placeSubmarine length = 3
+
+  // placePatrolBoat length = 2
+
+  // computer
+  
+}

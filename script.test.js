@@ -2,6 +2,7 @@ import {
   gameboardFactory,
   getRandomIntLessThan,
   shipFactory,
+  player,
 } from "./script.js";
 
 test("check random int function", () => {
@@ -163,3 +164,5 @@ describe("test gameboardFactory()", () => {
     expect(game.allShipsAreSunk()).toEqual(false);
   });
 });
+
+describe("test player()", () => {});
