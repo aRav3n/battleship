@@ -1,7 +1,19 @@
-body {
+body,
+body > div,
+form,
+label {
   display: grid;
   justify-content: center;
   justify-items: center;
+}
+
+button,
+form,
+input,
+label {
+  font-size: 1.5rem;
+  text-align: center;
+  gap: 2vh;
 }
 
 #computer {
@@ -57,4 +69,8 @@ h1 {
 
 #human {
   height: min(50vh, 95vw);
+}
+
+p {
+  font-size: 3rem;
 }

@@ -227,5 +227,6 @@ export function player(name) {
     placeDestroyer,
     placeSubmarine,
     placePatrolBoat,
+    name,
   };
 }
