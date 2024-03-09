@@ -79,6 +79,8 @@ export function gameboardFactory() {
       if (orientation === "h" && xToUse > gridSize - length) {
         xToUse = gridSize - length;
       }
+      xToUse = Number(xToUse);
+      yToUse = Number(xToUse);
       for (let i = 0; i < length; i++) {
         const thisX = xToUse + (orientation === "h" ? i : 0);
         const thisY = yToUse + (orientation === "v" ? i : 0);
@@ -88,6 +90,7 @@ export function gameboardFactory() {
         const spotString = spot.toString();
         locationArray.push(spotString);
       }
+
       shipObject.location = locationArray;
       ableToPlaceThisShip(navalFleet, shipObject)
         ? navalFleet.push(shipObject)
@@ -166,8 +169,16 @@ export function player(name) {
   const placeShip = (player, coordinateArrayXY, length, orientation) => {
     const fleet = player.navalFleet;
     const initialFleetSize = fleet.length;
-    const x = coordinateArrayXY[0];
-    const y = coordinateArrayXY[1];
+    let x;
+    let y;
+    if (Array.isArray(coordinateArrayXY)) {
+      x = coordinateArrayXY[0];
+      y = coordinateArrayXY[1];
+    } else {
+      const arrayFromString = coordinateArrayXY.split(",");
+      x = arrayFromString[0];
+      y = arrayFromString[1];
+    }
     player.placeShip(length, x, y, orientation);
     if (fleet.length === initialFleetSize) {
       return false;
@@ -228,5 +239,7 @@ export function player(name) {
     placeSubmarine,
     placePatrolBoat,
     name,
+    human,
+    computer,
   };
 }

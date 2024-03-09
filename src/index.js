@@ -7,42 +7,99 @@ import {
 
 import "./style.css";
 
-const makeDivs = (whichBoard) => {
+const makeDivs = (whichBoard, playerString) => {
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 10; j++) {
       const x = i;
       const y = j;
       const positionArray = [x, y].toString();
       const div = document.createElement("div");
-      const idName = `${positionArray}-${whichBoard}`;
+      const idName = `${positionArray}-${playerString}`;
       div.setAttribute("id", idName);
+      div.classList.add(`${playerString}-boardSpot`);
       whichBoard.appendChild(div);
     }
   }
 };
 
-const generateShipPlacementMode = () => {
+const initializeGame = (name) => {
+  const game = player(name);
+  return game;
+};
+
+const generateFireMissileMode = () => {
+  const humanBoard = document.querySelector("#human");
+  const computerBoard = document.querySelector("#computer");
+};
+
+const colorInHumanShips = (game) => {
+  const humanFleet = game.human.navalFleet;
+  for (let i = 0; i < humanFleet.length; i++) {
+    const shipLocation = humanFleet[i].location;
+    for (let i = 0; i < shipLocation.length; i++){
+      
+    }
+  }
+};
+
+const placeShip = (game, shipName, functionName) => {
+  const potentialSpotArray = document.querySelectorAll(".human-boardSpot");
+  const instructionString = `Place your ${shipName}`;
+  const h1 = document.querySelector("h1");
+  const button = document.querySelector("button");
+  h1.innerHTML = instructionString;
+  for (let i = 0; i < potentialSpotArray.length; i++) {
+    const spot = potentialSpotArray[i];
+    spot.addEventListener("click", () => {
+      const spotId = spot.id;
+      const orientation = button.id;
+      const coordinateArrayXY = spotId.split("-")[0];
+      functionName(true, coordinateArrayXY, orientation);
+      colorInHumanShips(game);
+    });
+  }
+};
+
+const placeCarrier = (game) => {
+  placeShip(game, "carrier", game.placeCarrier);
+};
+
+const generateShipPlacementMode = (game) => {
+  const body = document.querySelector("body");
+  const contentDiv = document.querySelector("#contentContainer");
+  contentDiv.innerHTML = "";
   const gameboards = document.createElement("div");
+  const humanBoard = document.createElement("id", "human");
+  const computerBoard = document.createElement("id", "computer");
   gameboards.setAttribute("id", "gameboards");
-  const humanBoard = document.createElement("div");
-  const computerBoard = document.createElement("div");
   humanBoard.classList.add("gameboard");
   computerBoard.classList.add("gameboard");
   humanBoard.setAttribute("id", "human");
+  humanBoard.classList.add("boardBig");
   computerBoard.setAttribute("id", "computer");
+  computerBoard.classList.add("boardSmall");
 
-  makeDivs(computerBoard);
-  makeDivs(humanBoard);
+  makeDivs(computerBoard, "computer");
+  makeDivs(humanBoard, "human");
+
+  const h = "Horizontal";
+  const v = "Vertical";
+  const button = document.createElement("button");
+  button.setAttribute("type", "button");
+  button.setAttribute("id", "h");
+  button.innerHTML = h;
+  button.addEventListener("click", () => {
+    button.innerHTML === h ? (button.innerHTML = v) : (button.innerHTML = h);
+    button.setAttribute("id", button.innerHTML[0].toLowerCase());
+  });
 
   gameboards.appendChild(computerBoard);
   gameboards.appendChild(humanBoard);
-  body.appendChild(gameboards);
-};
+  contentDiv.appendChild(button);
+  contentDiv.appendChild(gameboards);
+  body.appendChild(contentDiv);
 
-const initializeGame = (name) => {
-  const game = player(name);
-  const contentDiv = document.querySelector("#contentContainer");
-  contentDiv.innerHTML = "";
+  placeCarrier(game);
 };
 
 const domManipulation = () => {
@@ -92,7 +149,8 @@ const domManipulation = () => {
         warningP.innerHTML = "Your name can't be blank";
         contentDiv.appendChild(warningP);
       } else {
-        initializeGame(name);
+        const game = initializeGame(name);
+        generateShipPlacementMode(game);
       }
     });
   };
