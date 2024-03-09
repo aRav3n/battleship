@@ -5,7 +5,7 @@ body {
 }
 
 #computer {
-  height: min(30vh, 50vw);
+  height: min(20vh, 40vw);
 }
 
 .gameboard {
@@ -56,5 +56,5 @@ h1 {
 }
 
 #human {
-  height: min(45vh, 75vw);
+  height: min(50vh, 95vw);
 }

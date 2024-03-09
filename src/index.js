@@ -5,6 +5,8 @@ import {
   player,
 } from "./script.js";
 
+import "./style.css";
+
 const domManipulation = () => {
   console.log("domManipulationCalled");
   const body = document.querySelector("body");
