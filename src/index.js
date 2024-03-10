@@ -3,7 +3,7 @@ import {
   getRandomIntLessThan,
   shipFactory,
   player,
-} from "./script.js";
+} from "./gameLogic.js";
 
 import "./style.css";
 
@@ -36,15 +36,13 @@ const colorInHumanShips = (game) => {
   const humanFleet = game.human.navalFleet;
   for (let i = 0; i < humanFleet.length; i++) {
     const shipLocation = humanFleet[i].location;
-    for (let i = 0; i < shipLocation.length; i++){
-      
-    }
+    for (let i = 0; i < shipLocation.length; i++) {}
   }
 };
 
-const placeShip = (game, shipName, functionName) => {
+const placeShip = (game, shipName, functionName, numberOfSpaces) => {
   const potentialSpotArray = document.querySelectorAll(".human-boardSpot");
-  const instructionString = `Place your ${shipName}`;
+  const instructionString = `Place your ${shipName} (${numberOfSpaces} spaces)`;
   const h1 = document.querySelector("h1");
   const button = document.querySelector("button");
   h1.innerHTML = instructionString;
@@ -61,7 +59,7 @@ const placeShip = (game, shipName, functionName) => {
 };
 
 const placeCarrier = (game) => {
-  placeShip(game, "carrier", game.placeCarrier);
+  placeShip(game, "carrier", game.placeCarrier, 5);
 };
 
 const generateShipPlacementMode = (game) => {
