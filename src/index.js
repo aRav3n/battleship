@@ -10,8 +10,8 @@ import "./style.css";
 const makeDivs = (whichBoard, playerString) => {
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 10; j++) {
-      const x = i;
-      const y = j;
+      const x = j;
+      const y = i;
       const positionArray = [x, y].toString();
       const div = document.createElement("div");
       const idName = `${positionArray}-${playerString}`;
@@ -27,17 +27,22 @@ const initializeGame = (name) => {
   return game;
 };
 
+const colorInSpots = (player, playerAsString, classToAdd) => {
+  const fleet = player.navalFleet;
+  for (let i = 0; i < fleet.length; i++) {
+    const shipLocation = fleet[i].location;
+    for (let i = 0; i < shipLocation.length; i++) {
+      const spot = shipLocation[i];
+      const matchingId = `${spot}-${playerAsString}`;
+      const spotInDOM = document.getElementById(matchingId);
+      spotInDOM.classList.add(classToAdd);
+    }
+  }
+};
+
 const generateFireMissileMode = () => {
   const humanBoard = document.querySelector("#human");
   const computerBoard = document.querySelector("#computer");
-};
-
-const colorInHumanShips = (game) => {
-  const humanFleet = game.human.navalFleet;
-  for (let i = 0; i < humanFleet.length; i++) {
-    const shipLocation = humanFleet[i].location;
-    for (let i = 0; i < shipLocation.length; i++) {}
-  }
 };
 
 const placeShip = (game, shipName, functionName, numberOfSpaces) => {
@@ -53,7 +58,7 @@ const placeShip = (game, shipName, functionName, numberOfSpaces) => {
       const orientation = button.id;
       const coordinateArrayXY = spotId.split("-")[0];
       functionName(true, coordinateArrayXY, orientation);
-      colorInHumanShips(game);
+      colorInSpots(game.human, "human", "ship");
     });
   }
 };
