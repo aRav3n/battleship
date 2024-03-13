@@ -69,12 +69,12 @@ describe("test gameboardFactory()", () => {
 
   test("placeShip() places a single shipObject correctly", () => {
     const newGameboard = gameboardFactory();
-    newGameboard.placeShip(3, 0, 0, "h");
+    newGameboard.placeShip(3, 0, 1, "h");
     const onlyShipLocation = newGameboard.navalFleet[0].location.toString();
     const expectedArrayString = [
-      [0, 0],
-      [1, 0],
-      [2, 0],
+      [0, 1],
+      [1, 1],
+      [2, 1],
     ].toString();
     expect(onlyShipLocation).toBe(expectedArrayString);
   });

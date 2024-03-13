@@ -74,13 +74,14 @@ export function gameboardFactory() {
     } else {
       const locationArray = [];
       if (orientation === "v" && yToUse > gridSize - length) {
+        console.log("yToUse updated due to too long");
         yToUse = gridSize - length;
       }
       if (orientation === "h" && xToUse > gridSize - length) {
         xToUse = gridSize - length;
       }
       xToUse = Number(xToUse);
-      yToUse = Number(xToUse);
+      yToUse = Number(yToUse);
       for (let i = 0; i < length; i++) {
         const thisX = xToUse + (orientation === "h" ? i : 0);
         const thisY = yToUse + (orientation === "v" ? i : 0);
