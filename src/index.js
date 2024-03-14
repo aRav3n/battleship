@@ -27,18 +27,19 @@ const initializeGame = (name) => {
   return game;
 };
 
-const colorInSpots = (player, playerAsString, classToAdd) => {
+const colorInShips = (player, playerAsString) => {
   const fleet = player.navalFleet;
-  for (let i = 0; i < fleet.length; i++) {
-    const shipLocation = fleet[i].location;
-    for (let j = 0; j < shipLocation.length; j++) {
-      const spot = shipLocation[j];
-      const matchingId = `${spot}-${playerAsString}`;
-      const spotInDOM = document.getElementById(matchingId);
+  const shipToColor = fleet.length - 1;
+  const shipLocation = fleet[shipToColor].location;
 
-      spotInDOM.classList.add(classToAdd);
-    }
+  for (let i = 0; i < shipLocation.length; i++) {
+    const spot = shipLocation[i];
+    const matchingId = `${spot}-${playerAsString}`;
+    const spotInDOM = document.getElementById(matchingId);
+
+    spotInDOM.classList.add("ship");
   }
+  return;
 };
 
 const generateFireMissileMode = () => {
@@ -46,55 +47,54 @@ const generateFireMissileMode = () => {
   const computerBoard = document.querySelector("#computer");
 };
 
-const placeShip = (
-  game,
-  shipName,
-  functionName,
-  numberOfSpaces,
-  functionToPlaceNextShip
-) => {
-  const potentialSpotArray = document.querySelectorAll(".human-boardSpot");
-  const instructionString = `Place your ${shipName} (${numberOfSpaces} spaces)`;
-  const h1 = document.querySelector("h1");
+const placeShip = (game) => {
+  const arrayOfShipsInGame = [];
+  const generateShipObject = (shipName, functionName, numberOfSpaces) => {
+    arrayOfShipsInGame.push({ shipName, functionName, numberOfSpaces });
+  };
+  generateShipObject("carrier", game.placeCarrier, 5);
+  generateShipObject("battleship", game.placeBattleship, 4);
+  generateShipObject("destroyer", game.placeDestroyer, 3);
+  generateShipObject("submarine", game.placeSubmarine, 3);
+  generateShipObject("patrol boat", game.placePatrolBoat, 2);
+
+  const updateDom = () => {
+    const fleetLength = game.human.navalFleet.length;
+    if (fleetLength < arrayOfShipsInGame.length) {
+      const currentShip = arrayOfShipsInGame[fleetLength];
+      const shipName = currentShip.shipName;
+      const numberOfSpaces = currentShip.numberOfSpaces;
+      const instructionString = `Place your ${shipName} (${numberOfSpaces} spaces)`;
+      const h1 = document.querySelector("h1");
+      h1.innerHTML = instructionString;
+    }
+  };
+
+  updateDom();
+
   const button = document.querySelector("button");
-  h1.innerHTML = instructionString;
+  const potentialSpotArray = document.querySelectorAll(".human-boardSpot");
   for (let i = 0; i < potentialSpotArray.length; i++) {
     const spot = potentialSpotArray[i];
+
     spot.addEventListener("click", () => {
+      const fleetLength = game.human.navalFleet.length;
+      const currentShip = arrayOfShipsInGame[fleetLength];
+      const functionName = currentShip.functionName;
       const spotId = spot.id;
       const orientation = button.id;
       const coordinateArrayXY = spotId.split("-")[0];
       functionName(true, coordinateArrayXY, orientation);
-      colorInSpots(game.human, "human", "ship");
+      colorInShips(game.human, "human");
+
+      updateDom();
+
+      return;
     });
   }
-  if (functionToPlaceNextShip !== undefined) {
-    functionToPlaceNextShip(game);
-  }
 };
 
-const placePatrolBoat = (game) => {
-  ƒ;
-  placeShip(game, "patrol boat", game.placePatrolBoat, 2);
-};
-
-const placeSubmarine = (game) => {
-  placeShip(game, "submarine", game.placeSubmarine, 3, placePatrolBoat);
-};
-
-const placeDestroyer = (game) => {
-  placeShip(game, "destroyer", game.placeDestroyer, 3, placeSubmarine);
-};
-
-const placeBattleship = (game) => {
-  placeShip(game, "battleship", game.placeBattleship, 4, placeDestroyer);
-};
-
-const placeCarrier = (game) => {
-  placeShip(game, "carrier", game.placeCarrier, 5), placeBattleship;
-};
-
-const generateShipPlacementMode = (game) => {
+const humanShipPlacementMode = (game) => {
   const body = document.querySelector("body");
   const contentDiv = document.querySelector("#contentContainer");
   contentDiv.innerHTML = "";
@@ -129,7 +129,7 @@ const generateShipPlacementMode = (game) => {
   contentDiv.appendChild(gameboards);
   body.appendChild(contentDiv);
 
-  placeCarrier(game);
+  placeShip(game);
 };
 
 const domManipulation = () => {
@@ -180,7 +180,7 @@ const domManipulation = () => {
         contentDiv.appendChild(warningP);
       } else {
         const game = initializeGame(name);
-        generateShipPlacementMode(game);
+        humanShipPlacementMode(game);
       }
     });
   };
