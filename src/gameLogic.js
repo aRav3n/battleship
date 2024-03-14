@@ -159,11 +159,12 @@ export function player(name) {
     ) {
       throw new Error(`${x}, ${y} is not a valid set of coordinates`);
     } else if (target.missedHits.includes(coordinateString)) {
-      return "this spot has already been attacked";
+      return false;
     }
 
     target.receiveAttack(coordinateArrayXY);
     humanPlayerTurn = !humanPlayerTurn;
+    return true;
   };
 
   const placeShip = (player, coordinateArrayXY, length, orientation) => {
@@ -241,5 +242,6 @@ export function player(name) {
     name,
     human,
     computer,
+    getRandomIntLessThan,
   };
 }

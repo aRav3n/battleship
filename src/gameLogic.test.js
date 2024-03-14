@@ -181,9 +181,7 @@ describe("test player()", () => {
     const game = player("Han");
     game.fireMissile([2, 2]);
     game.fireMissile([1, 2]);
-    expect(game.fireMissile([2, 2])).toBe(
-      "this spot has already been attacked"
-    );
+    expect(game.fireMissile([2, 2])).toBe(false);
   });
 
   test("placeCarrier lets you know when a ship was placed", () => {
