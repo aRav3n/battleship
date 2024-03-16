@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "build": "webpack",
+    "compileGit": "git subtree push --prefix dist origin gh-pages",
     "watch": "webpack --watch",
     "test": "jest"
   },

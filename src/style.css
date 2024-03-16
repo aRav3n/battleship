@@ -54,14 +54,6 @@ label {
   background-color: #00000066;
 }
 
-.gameboard > .hit {
-  background-color: #ff0000;
-}
-
-.gameboard > .hit:hover {
-  background-color: #ff000066;
-}
-
 .gameboard > .miss {
   background-color: #ffffff;
 }
@@ -73,6 +65,14 @@ label {
 .gameboard > .ship {
   background-color: #000000;
   border-radius: 25%;
+}
+
+.gameboard > .hit {
+  background-color: #ff0000;
+}
+
+.gameboard > .hit:hover {
+  background-color: #ff000066;
 }
 
 #gameboards {

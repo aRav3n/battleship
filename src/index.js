@@ -59,13 +59,35 @@ const generateFireMissileMode = (game) => {
     }
   }
 
+  const displayWinner = (headingString) => {
+    heading.innerHTML = headingString;
+    const gameboardParentDiv = document.getElementById("gameboards");
+    button.innerHTML = "Play again!";
+    gameboardParentDiv.innerHTML = "";
+  };
+
+  const checkForSunkFleets = () => {
+    const computerFleetSunk = game.computer.allShipsAreSunk();
+    const humanFleetSunk = game.human.allShipsAreSunk();
+
+    if (computerFleetSunk && humanFleetSunk) {
+      displayWinner("It's a tie!");
+    } else if (computerFleetSunk) {
+      displayWinner(`${game.name} wins!`);
+    } else if (humanFleetSunk) {
+      displayWinner(`${game.name} lost!`);
+    }
+  };
+
   const updateHitArray = (fleet, array) => {
     for (let i = 0; i < fleet.length; i++) {
       const ship = fleet[i];
       const hitArray = ship.ship.ship;
       const locationArray = ship.location;
       for (let j = 0; j < hitArray.length; j++) {
-        hitArray[j] === 1 ? array.push(locationArray[j]) : null;
+        if (hitArray[j] === 1) {
+          array.push(locationArray[j]);
+        }
       }
     }
   };
@@ -73,11 +95,13 @@ const generateFireMissileMode = (game) => {
   const getRandomCoordinates = () => {
     const x = getRandomIntLessThan(10);
     const y = getRandomIntLessThan(10);
-    let str = [x, y].toString() + "";
-    if (humanBoardHits.includes(str) || humanBoardMisses.includes(str)) {
-      str = getRandomCoordinates();
+    let array = [x, y];
+    if (
+      humanBoardHits.includes(array.toString()) ||
+      humanBoardMisses.includes(array.toString())
+    ) {
+      array = getRandomCoordinates();
     }
-    const array = str.split(",");
     return array;
   };
 
@@ -114,6 +138,9 @@ const generateFireMissileMode = (game) => {
       updateHitArray(humanFleet, humanBoardHits);
       colorMissileShots(humanBoardMisses, "human", "miss");
       colorMissileShots(humanBoardHits, "human", "hit");
+
+      // Check if someone has won
+      checkForSunkFleets();
     }
   };
 
@@ -143,9 +170,7 @@ const placeComputerShips = (game) => {
     const currentShip = arrayOfShipsInGame[fleetLength];
     const functionName = currentShip.functionName;
     let orientation;
-    getRandomIntLessThan(2) % 1 === 0
-      ? (orientation = "h")
-      : (orientation = "v");
+    getRandomIntLessThan(2) === 0 ? (orientation = "h") : (orientation = "v");
     const coordinateArrayXY = [];
     coordinateArrayXY.push(game.getRandomIntLessThan(10));
     coordinateArrayXY.push(game.getRandomIntLessThan(10));
@@ -263,6 +288,7 @@ const domManipulation = () => {
 
   const generateMainBody = () => {
     const heading = document.createElement("h1");
+    heading.innerHTML = "BATTLESHIP";
     body.appendChild(heading);
     const contentContainer = document.createElement("div");
     contentContainer.setAttribute("id", "contentContainer");
