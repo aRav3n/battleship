@@ -239,6 +239,7 @@ export function player(name) {
     placeDestroyer,
     placeSubmarine,
     placePatrolBoat,
+    humanPlayerTurn,
     name,
     human,
     computer,

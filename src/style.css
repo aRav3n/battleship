@@ -51,15 +51,23 @@ label {
 }
 
 .gameboard > div:hover {
-  background-color: #ffffff66;
+  background-color: #00000066;
 }
 
 .gameboard > .hit {
   background-color: #ff0000;
 }
 
+.gameboard > .hit:hover {
+  background-color: #ff000066;
+}
+
 .gameboard > .miss {
   background-color: #ffffff;
+}
+
+.gameboard > .miss:hover {
+  background-color: #ffffff66;
 }
 
 .gameboard > .ship {

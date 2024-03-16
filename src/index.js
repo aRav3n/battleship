@@ -1,3 +1,4 @@
+import { includes } from "lodash";
 import {
   gameboardFactory,
   getRandomIntLessThan,
@@ -27,36 +28,102 @@ const initializeGame = (name) => {
   return game;
 };
 
-const colorInShips = (player, playerAsString) => {
-  const fleet = player.navalFleet;
-  const shipToColor = fleet.length - 1;
-  const shipLocation = fleet[shipToColor].location;
-
-  for (let i = 0; i < shipLocation.length; i++) {
-    const spot = shipLocation[i];
-    const matchingId = `${spot}-${playerAsString}`;
-    const spotInDOM = document.getElementById(matchingId);
-
-    spotInDOM.classList.add("ship");
-  }
-  return;
-};
-
 const generateFireMissileMode = (game) => {
   const humanBoard = document.querySelector("#human");
+  const humanBoardMisses = game.human.missedHits;
+  const humanBoardHits = [];
+  const humanFleet = game.human.navalFleet;
   const computerBoard = document.querySelector("#computer");
+  const computerBoardMisses = game.computer.missedHits;
+  const computerBoardHits = [];
+  const computerFleet = game.computer.navalFleet;
+  const computerBoardSpots = document.querySelectorAll(".computer-boardSpot");
   const heading = document.querySelector("h1");
-
-  const fireHumanMissile = (coordinates) => {
-    const coordinateArrayXY = coordinates.split(",");
-    
-  };
+  const arrayOfHumanTargets = [];
+  const arrayOfComputerTargets = [];
+  const button = document.querySelector("button");
 
   heading.innerHTML = "Fire Missiles";
   humanBoard.classList.toggle("boardBig");
   humanBoard.classList.toggle("boardSmall");
   computerBoard.classList.toggle("boardSmall");
   computerBoard.classList.toggle("boardBig");
+  button.remove();
+
+  for (let i = 0; i < 10; i++) {
+    for (let j = 0; j < 10; j++) {
+      const computerString = `${i},${j}-computer`;
+      const humanString = `${i},${j}-human`;
+      arrayOfHumanTargets.push(humanString);
+      arrayOfComputerTargets.push(computerString);
+    }
+  }
+
+  const updateHitArray = (fleet, array) => {
+    for (let i = 0; i < fleet.length; i++) {
+      const ship = fleet[i];
+      const hitArray = ship.ship.ship;
+      const locationArray = ship.location;
+      for (let j = 0; j < hitArray.length; j++) {
+        hitArray[j] === 1 ? array.push(locationArray[j]) : null;
+      }
+    }
+  };
+
+  const getRandomCoordinates = () => {
+    const x = getRandomIntLessThan(10);
+    const y = getRandomIntLessThan(10);
+    let str = [x, y].toString() + "";
+    if (humanBoardHits.includes(str) || humanBoardMisses.includes(str)) {
+      str = getRandomCoordinates();
+    }
+    const array = str.split(",");
+    return array;
+  };
+
+  const colorMissileShots = (
+    playerBoardMissesOrHits,
+    playerAsString,
+    hitOrMiss
+  ) => {
+    for (let i = 0; i < playerBoardMissesOrHits.length; i++) {
+      const shot = playerBoardMissesOrHits[i];
+      const idInDom = shot + "-" + playerAsString;
+      const spotOnBoard = document.getElementById(idInDom);
+      if (!spotOnBoard.classList.contains(hitOrMiss)) {
+        spotOnBoard.classList.add(hitOrMiss);
+      }
+    }
+  };
+
+  const fireMissile = (coordinates) => {
+    if (
+      !computerBoardHits.includes(coordinates) &&
+      !computerBoardMisses.includes(coordinates)
+    ) {
+      // First the human attacks
+      const coordinateArrayXY = coordinates.split(",");
+      game.fireMissile(coordinateArrayXY);
+      updateHitArray(computerFleet, computerBoardHits);
+      colorMissileShots(computerBoardMisses, "computer", "miss");
+      colorMissileShots(computerBoardHits, "computer", "hit");
+
+      // Then computer fires an attack
+      const computerShotCoordinates = getRandomCoordinates();
+      game.fireMissile(computerShotCoordinates);
+      updateHitArray(humanFleet, humanBoardHits);
+      colorMissileShots(humanBoardMisses, "human", "miss");
+      colorMissileShots(humanBoardHits, "human", "hit");
+    }
+  };
+
+  for (let i = 0; i < computerBoardSpots.length; i++) {
+    const thisSpot = computerBoardSpots[i];
+    const coordinates = thisSpot.id.split("-")[0];
+    thisSpot.addEventListener("click", () => {
+      fireMissile(coordinates);
+    });
+  }
 };
 
 const placeComputerShips = (game) => {
@@ -90,6 +157,21 @@ const placeComputerShips = (game) => {
 };
 
 const humanShipPlacementMode = (game) => {
+  const colorInShips = (player, playerAsString) => {
+    const fleet = player.navalFleet;
+    const shipToColor = fleet.length - 1;
+    const shipLocation = fleet[shipToColor].location;
+
+    for (let i = 0; i < shipLocation.length; i++) {
+      const spot = shipLocation[i];
+      const matchingId = `${spot}-${playerAsString}`;
+      const spotInDOM = document.getElementById(matchingId);
+
+      spotInDOM.classList.add("ship");
+    }
+    return;
+  };
+
   const placeShip = (game) => {
     const arrayOfShipsInGame = [];
     const generateShipObject = (shipName, functionName, numberOfSpaces) => {
